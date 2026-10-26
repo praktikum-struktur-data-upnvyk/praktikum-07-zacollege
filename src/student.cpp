@@ -66,7 +66,57 @@ using namespace std;
 //     Node satu{42, NULL, NULL};
 //     preorder(&satu);      // mencetak:  42
 // =============================================================================
+namespace {
+void printPreorder(const Node* root, bool& first) {
+    if (root == NULL) {
+        return;
+    }
+
+    if (!first) {
+        cout << ' ';
+    }
+    cout << root->data;
+    first = false;
+
+    printPreorder(root->left, first);
+    printPreorder(root->right, first);
+}
+
+void printInorder(const Node* root, bool& first) {
+    if (root == NULL) {
+        return;
+    }
+
+    printInorder(root->left, first);
+
+    if (!first) {
+        cout << ' ';
+    }
+    cout << root->data;
+    first = false;
+
+    printInorder(root->right, first);
+}
+
+void printPostorder(const Node* root, bool& first) {
+    if (root == NULL) {
+        return;
+    }
+
+    printPostorder(root->left, first);
+    printPostorder(root->right, first);
+
+    if (!first) {
+        cout << ' ';
+    }
+    cout << root->data;
+    first = false;
+}
+}
+
 void preorder(const Node* root) {
+    bool first = true;
+    printPreorder(root, first);
 }
 
 // =============================================================================
@@ -90,6 +140,8 @@ void preorder(const Node* root) {
 //     inorder(NULL);     // tidak mencetak apa pun
 // =============================================================================
 void inorder(const Node* root) {
+    bool first = true;
+    printInorder(root, first);
 }
 
 // =============================================================================
@@ -114,6 +166,8 @@ void inorder(const Node* root) {
 //     postorder(NULL);   // tidak mencetak apa pun
 // =============================================================================
 void postorder(const Node* root) {
+    bool first = true;
+    printPostorder(root, first);
 }
 
 // =============================================================================
@@ -140,6 +194,20 @@ void postorder(const Node* root) {
 //     clear(root);              // aman, tidak terjadi apa-apa
 // =============================================================================
 void clear(Node*& root) {
+    if (root == NULL) {
+        return;
+    }
+
+    Node* kiri = root->left;
+    Node* kanan = root->right;
+    root->left = NULL;
+    root->right = NULL;
+
+    delete root;
+    root = NULL;
+
+    clear(kiri);
+    clear(kanan);
 }
 
 // =============================================================================
@@ -177,7 +245,14 @@ void clear(Node*& root) {
 //     3                           masih punya satu cabang)
 // =============================================================================
 int jumlahDaun(const Node* root) {
-    return 0;
+    if (root == NULL) {
+        return 0;
+    }
+    if (root->left == NULL && root->right == NULL) {
+        return 1;
+    }
+
+    return jumlahDaun(root->left) + jumlahDaun(root->right);
 }
 
 // =============================================================================
